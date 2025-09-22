@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1095835292152",
+    "project_id": "note-app-with-firebase-73c91",
+    "storage_bucket": "note-app-with-firebase-73c91.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1095835292152:android:750a7df85ec21e9c10860d",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJksuF8RH-Fpdprhubuy5i3NVp1ktbdg4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
