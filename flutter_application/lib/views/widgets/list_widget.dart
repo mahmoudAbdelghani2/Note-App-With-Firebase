@@ -20,7 +20,9 @@ class _ListWidgetState extends State<ListWidget> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => DetailsScreen(note: widget.note)),
+          MaterialPageRoute(
+            builder: (context) => DetailsScreen(note: widget.note),
+          ),
         );
       },
       child: BlocConsumer<NoteCubit, NoteState>(
@@ -71,7 +73,7 @@ class _ListWidgetState extends State<ListWidget> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
-            color: Color.fromARGB(255, 250, 247, 247),
+            color: Colors.white,
             elevation: 4,
             child: ListTile(
               title: Text(

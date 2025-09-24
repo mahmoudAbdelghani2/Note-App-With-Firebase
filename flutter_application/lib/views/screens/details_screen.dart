@@ -1,11 +1,14 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application/models/note_model.dart';
+import 'package:flutter_application/views/screens/edit_note_screen.dart';
 import 'package:intl/intl.dart';
 
 class DetailsScreen extends StatefulWidget {
-  final NoteModel note;
+  NoteModel note;
 
-  const DetailsScreen({super.key, required this.note});
+  DetailsScreen({super.key, required this.note});
 
   @override
   State<DetailsScreen> createState() => _DetailsScreenState();
@@ -33,13 +36,24 @@ class _DetailsScreenState extends State<DetailsScreen> {
           fontWeight: FontWeight.bold,
         ),
         actions: [
-          IconButton(
-            icon: Icon(Icons.edit, color: Color(0xFF0D1C1C)),
-            onPressed: () {
-              // TODO: Implement edit functionality here
-            },
+    IconButton(
+      icon: Icon(Icons.edit, color: Color(0xFF0D1C1C)),
+      onPressed: () async {
+        final updatedNote = await Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EditNoteScreen(note: widget.note),
           ),
-        ],
+        );
+
+        if (updatedNote != null) {
+          setState(() {
+            widget.note = updatedNote;
+          });
+        }
+      },
+    ),
+  ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -79,7 +93,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 style: TextStyle(
                   fontSize: 14,
                   fontStyle: FontStyle.italic,
-                  color: Colors.grey[600],
+                  color: Color(0XFF4A9C9C),
                 ),
               ),
             ],

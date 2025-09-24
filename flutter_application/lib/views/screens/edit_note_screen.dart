@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application/cubit/note_cubit.dart';
 import 'package:flutter_application/cubit/note_states.dart';
 import 'package:flutter_application/models/note_model.dart';
-import 'package:flutter_application/views/screens/all_notes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AddNoteScreen extends StatefulWidget {
-  const AddNoteScreen({super.key});
+class EditNoteScreen extends StatefulWidget {
+  final NoteModel note;
+  const EditNoteScreen({super.key, required this.note});
 
   @override
-  State<AddNoteScreen> createState() => _AddNoteScreenState();
+  State<EditNoteScreen> createState() => _EditNoteScreenState();
 }
 
-class _AddNoteScreenState extends State<AddNoteScreen> {
+class _EditNoteScreenState extends State<EditNoteScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _contentController = TextEditingController();
@@ -21,7 +21,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: Text('Create Note'),
+        title: Text('Edit Note'),
         centerTitle: true,
         backgroundColor: Colors.white,
         foregroundColor: Color(0xFF0D1C1C),
@@ -31,6 +31,12 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
           fontSize: 30,
           fontWeight: FontWeight.bold,
         ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Color(0xFF0D1C1C)),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -39,11 +45,11 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
             padding: const EdgeInsets.all(16.0),
             child: BlocConsumer<NoteCubit, NoteState>(
               listener: (context, state) {
-                if (state is AddedNoteState) {
+                if (state is UpdatedNoteState) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
-                        'Note added successfully!',
+                        'Note updated successfully!',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -119,18 +125,13 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                             color: Colors.teal,
                           ),
                         ),
-                        hintText: 'ُEnter Note Title',
+                        hintText:
+                            'ُEnter new note title, (if you want to change)',
                         hintStyle: TextStyle(
                           color: Color(0xFF4A9C9C),
                           fontWeight: FontWeight.w300,
                         ),
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a title';
-                        }
-                        return null;
-                      },
                     ),
                     SizedBox(height: 16),
                     Text(
@@ -164,7 +165,8 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                             color: Colors.teal,
                           ),
                         ),
-                        hintText: 'ُEnter Note Content',
+                        hintText:
+                            'ُEnter new note content, (if you want to change)',
                         hintStyle: TextStyle(
                           color: Color(0xFF4A9C9C),
                           fontWeight: FontWeight.w300,
@@ -172,12 +174,6 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                       ),
                       minLines: 6,
                       maxLines: null,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter content';
-                        }
-                        return null;
-                      },
                     ),
                     SizedBox(height: 290),
                     SizedBox(
@@ -185,17 +181,21 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                       height: 50,
                       child: ElevatedButton(
                         onPressed: () {
-                          if (formKey.currentState!.validate()) {
-                            BlocProvider.of<NoteCubit>(context).addNote(
-                              NoteModel(
-                                title: _titleController.text,
-                                content: _contentController.text,
-                                createdAt: DateTime.now(),
-                              ),
-                            );
-                            _titleController.clear();
-                            _contentController.clear();
-                          }
+                          final updatedNote = widget.note.copyWith(
+                            title: _titleController.text.isEmpty
+                                ? widget.note.title
+                                : _titleController.text,
+                            content: _contentController.text.isEmpty
+                                ? widget.note.content
+                                : _contentController.text,
+                            updatedAt: DateTime.now(),
+                          );
+
+                          BlocProvider.of<NoteCubit>(
+                            context,
+                          ).updateNote(updatedNote);
+
+                          Navigator.pop(context, updatedNote);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Color(0xFF0AD9D9),
@@ -204,30 +204,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                           ),
                         ),
                         child: Text(
-                          'Add Note',
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF0D1C1C),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AllNotesScreen(),
-                            ),
-                          );
-                        },
-                        child: Text(
-                          'View Notes',
+                          'Save Changes',
                           style: TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,

@@ -57,17 +57,16 @@ class NoteCubit extends Cubit<NoteState> {
   }
 
   void updateNote(NoteModel updatedNote) async {
-    emit(LoadingNoteState());
     try {
       await _firestore
           .collection(collectionPath)
           .doc(updatedNote.id)
           .update(updatedNote.toJson());
+
       int index = notes.indexWhere((note) => note.id == updatedNote.id);
       if (index != -1) {
         notes[index] = updatedNote;
         emit(UpdatedNoteState(updatedNote));
-      } else {
         emit(NotesLoadedState(List.from(notes)));
       }
     } catch (e) {
@@ -76,32 +75,3 @@ class NoteCubit extends Cubit<NoteState> {
     }
   }
 }
-
-
-/**
- * void loadNotes() {
-    emit(NotesLoadedState(List.from(notes)));
-  }
-
-  void addNote(NoteModel note) {
-    emit(LoadingNoteState());
-    notes.add(note);
-    loadNotes();
-  }
-
-  void deleteNote(int noteId) {
-    emit(LoadingNoteState());
-    notes.removeWhere((note) => note.id == noteId);
-    loadNotes();
-  }
-  void updateNote(NoteModel updatedNote) {
-    emit(LoadingNoteState());
-    int index = notes.indexWhere((note) => note.id == updatedNote.id);
-    if (index != -1) {
-      notes[index] = updatedNote;
-      loadNotes();
-    } else {
-      loadNotes();
-    }
-  }
- */
