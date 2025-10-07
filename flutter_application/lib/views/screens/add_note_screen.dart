@@ -190,6 +190,7 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                               NoteModel(
                                 title: _titleController.text,
                                 content: _contentController.text,
+                                userId: '', // سيتم استبداله بـ currentUserId في NoteCubit
                                 createdAt: DateTime.now(),
                               ),
                             );
@@ -219,11 +220,12 @@ class _AddNoteScreenState extends State<AddNoteScreen> {
                       height: 50,
                       child: TextButton(
                         onPressed: () {
-                          Navigator.push(
+                          Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
                               builder: (context) => AllNotesScreen(),
                             ),
+                            (Route<dynamic> route) => false,
                           );
                         },
                         child: Text(

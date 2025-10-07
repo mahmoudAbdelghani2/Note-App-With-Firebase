@@ -1,0 +1,20 @@
+// Security Rules for Firestore
+// هذه القواعد تضمن أن كل مستخدم يمكنه الوصول لملاحظاته فقط
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // قواعد للملاحظات - كل مستخدم يمكنه الوصول لملاحظاته فقط
+    match /notes/{noteId} {
+      allow read, write: if request.auth != null && 
+                        resource.data.userId == request.auth.uid;
+      allow create: if request.auth != null && 
+                   request.resource.data.userId == request.auth.uid;
+    }
+  }
+}
+
+// Firestore Indexes Needed:
+// Collection: notes
+// Fields: userId (Ascending), createdAt (Descending)
+// Query Scope: Collection

@@ -4,6 +4,7 @@ class NoteModel {
   String? id;
   final String title;
   final String content;
+  final String userId; // معرف المستخدم الذي أنشأ الملاحظة
   final DateTime createdAt;
   DateTime? updatedAt;
 
@@ -11,6 +12,7 @@ class NoteModel {
     this.id,
     required this.title,
     required this.content,
+    required this.userId,
     required this.createdAt,
     this.updatedAt,
   });
@@ -20,6 +22,7 @@ class NoteModel {
       id: json['id'] ?? '',
       title: json['title'] ?? '',
       content: json['content'] ?? '',
+      userId: json['userId'] ?? '',
       createdAt: (json['createdAt'] as Timestamp).toDate(),
       updatedAt: json['updatedAt'] != null
           ? (json['updatedAt'] as Timestamp).toDate()
@@ -31,6 +34,7 @@ class NoteModel {
     return {
       'title': title,
       'content': content,
+      'userId': userId,
       'createdAt': Timestamp.fromDate(createdAt),
       if (updatedAt != null)
         'updatedAt': Timestamp.fromDate(updatedAt!),
@@ -41,6 +45,7 @@ class NoteModel {
     String? id,
     String? title,
     String? content,
+    String? userId,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -48,6 +53,7 @@ class NoteModel {
       id: id ?? this.id,
       title: title ?? this.title,
       content: content ?? this.content,
+      userId: userId ?? this.userId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
